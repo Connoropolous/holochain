@@ -174,7 +174,11 @@ pub async fn setup_app(
 
     let handle = conductor_handle.clone();
 
-    (tmpdir, RealAppInterfaceApi::new(conductor_handle), handle)
+    (
+        tmpdir,
+        RealAppInterfaceApi::new(conductor_handle, "test-interface".into()),
+        handle,
+    )
 }
 
 pub fn warm_wasm_tests() {

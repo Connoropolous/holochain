@@ -1327,7 +1327,7 @@ mod slow_tests {
             .unwrap();
         let shutdown = conductor.take_shutdown_handle().await.unwrap();
         let interface = RealAdminInterfaceApi::new(conductor.clone());
-        let app_interface = RealAppInterfaceApi::new(conductor.clone());
+        let app_interface = RealAppInterfaceApi::new(conductor.clone(), "test-interface".into());
 
         // Create dna
         let uuid = Uuid::new_v4();
