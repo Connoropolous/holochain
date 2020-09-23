@@ -100,6 +100,13 @@ pub enum ElementEntry<'a> {
     NotStored,
 }
 
+/// Special trait suggesting what the actual error type should be
+pub trait TryFromSerializedBytes<T> {
+  /// Matches the signatures of the auto-generated holochain_serial!
+  /// conversion functions
+  fn try_from(sb: SerializedBytes) -> Result<T, SerializedBytesError>;
+}
+
 impl<'a> ElementEntry<'a> {
     /// Provides entry data if it exists.
     ///
@@ -119,7 +126,7 @@ impl<'a> ElementEntry<'a> {
     /// anything other than ElementEntry::Present returns None
     /// a present entry that fails to deserialize cleanly is an error
     /// a present entry that deserializes cleanly is returned as the provided type A
-    pub fn to_app_option<A: TryFrom<SerializedBytes>>(&'a self) -> Result<Option<A>, A::Error> {
+    pub fn to_app_option<A: TryFromSerializedBytes<A>>(&'a self) -> Result<Option<A>, SerializedBytesError> {
         match self.as_option() {
             Some(Entry::App(eb)) => Ok(Some(A::try_from(SerializedBytes::from(eb.to_owned()))?)),
             _ => Ok(None),
